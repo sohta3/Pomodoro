@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { setPomodoroLength, setBreakLength, setActivityType,
     startTimer, tickTimer, pauseTimer, clearTimer, finishTimer
 } from '../actions'
-//import Controls from '../presentationals/Controls'
-//import Clock from '../presentationals/Clock'
+import Controls from '../components/controls'
+import Clock from '../components/clock'
 
 import {
     View,
@@ -44,25 +44,25 @@ class Root extends React.Component {
         const startTimeout = () => {
             t.timeout = setTimeout(() => {
                 t.counter = t.counter - t.ONE_SEC
-            if (t.counter === 0) {
-                let type = (p.activity_type == "p") ? "b" : "p"
-                p.finishTimer()
-                p.setActivityType(type)
-                //t.tickSound.pause()
-                //t.tickSound.currentTime = 0
-                //t.alarmSound.play()
-            } else {
-                p.tickTimer(t.counter)
-            }
-        }, t.ONE_SEC)
+                if (t.counter === 0) {
+                    let type = (p.activity_type == "p") ? "b" : "p"
+                    p.finishTimer()
+                    p.setActivityType(type)
+                    //t.tickSound.pause()
+                    //t.tickSound.currentTime = 0
+                    //t.alarmSound.play()
+                } else {
+                    p.tickTimer(t.counter)
+                }
+            }, t.ONE_SEC)
         }
 
         if (p.timer.is_finished) {
             p.clearTimer()
             setTimeout(() => {
                 t.tickSound.play()
-            p.startTimer(length)
-        }, t.ONE_SEC)
+                p.startTimer(length)
+            }, t.ONE_SEC)
         }
 
         if (timer.is_active) {
@@ -79,7 +79,28 @@ class Root extends React.Component {
         let humanTime = (p.activity_type == "b") ? p.breakLength : p.pomodoroLength
         return (
             <View style={styles.container}>
-                <Text>hello world</Text>
+                <Controls
+                    timer={p.timer}
+                    pomodoroLength={p.pomodoroLength}
+                    breakLength={p.breakLength}
+                    activityType={p.activity_type}
+                    stopTimeout={this.stopTimeout}
+                    acts={{
+                        setActivityType: p.setActivityType,
+                            setBreakLength: p.setBreakLength,
+                            setPomodoroLength: p.setPomodoroLength,
+                            startTimer: p.startTimer,
+                            pauseTimer: p.pauseTimer,
+                            clearTimer: p.clearTimer
+                    }}
+                    sounds={{
+                        tick: this.tickSound,
+                            alarm: this.alarmSound
+                    }}
+                />
+                <Clock timer={p.timer} type={p.activity_type} act={p.setActivityType}>
+                    {humanTime}
+                </Clock>
             </View>
         )
     }
