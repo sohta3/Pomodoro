@@ -5,6 +5,7 @@ import { setPomodoroLength, setBreakLength, setActivityType,
 } from '../actions'
 import Controls from '../components/controls'
 import Clock from '../components/clock'
+import Sound from 'react-native-sound'
 
 import {
     View,
@@ -29,6 +30,22 @@ class Root extends React.Component {
         //    this.currentTime = 0
         //    this.play()
         //}, false);
+
+        this.tickSound = new Sound('tick_tock_sound.mp3', Sound.MAIN_BUNDLE, (e) => {
+            if (e) {
+                console.log('error', e);
+            } else {
+                console.log('duration', this.tickSound.getDuration());
+            }
+        });
+
+        this.alarmSound = new Sound('alarm_clock_sound_short.mp3', Sound.MAIN_BUNDLE, (e) => {
+            if (e) {
+                console.log('error', e);
+            } else {
+                console.log('duration', this.alarmSound.getDuration());
+            }
+        });
     }
 
     stopTimeout () {
@@ -48,9 +65,9 @@ class Root extends React.Component {
                     let type = (p.activity_type == "p") ? "b" : "p"
                     p.finishTimer()
                     p.setActivityType(type)
-                    //t.tickSound.pause()
-                    //t.tickSound.currentTime = 0
-                    //t.alarmSound.play()
+                    t.tickSound.pause()
+                    t.tickSound.setCurrentTime(0)
+                    t.alarmSound.play()
                 } else {
                     p.tickTimer(t.counter)
                 }
@@ -95,7 +112,7 @@ class Root extends React.Component {
                     }}
                     sounds={{
                         tick: this.tickSound,
-                            alarm: this.alarmSound
+                        alarm: this.alarmSound
                     }}
                 />
                 <Clock timer={p.timer} type={p.activity_type} act={p.setActivityType}>

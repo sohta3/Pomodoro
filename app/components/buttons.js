@@ -24,7 +24,8 @@ class Buttons extends React.Component {
         activityType = (activityType == "p") ? p.pomodoroLength : p.breakLength
         time = p.timer.time || activityType
         p.acts.startTimer(time)
-        //p.sounds.tick.play()
+        p.sounds.tick.setNumberOfLoops(-1)
+        p.sounds.tick.play()
     }
 
     _pauseTimer () {
@@ -35,17 +36,17 @@ class Buttons extends React.Component {
         time = p.timer.time || activityType
         p.stopTimeout()
         p.acts.pauseTimer(time)
-        //p.sounds.tick.pause()
+        p.sounds.tick.pause()
     }
 
     _clearTimer () {
         let p = this.props
         p.stopTimeout()
         p.acts.clearTimer()
-        //p.sounds.tick.pause()
-        //p.sounds.alarm.pause()
-        //p.sounds.tick.currentTime = 0
-        //p.sounds.alarm.currentTime = 0
+        p.sounds.tick.pause()
+        p.sounds.alarm.pause()
+        p.sounds.tick.setCurrentTime(0)
+        p.sounds.alarm.setCurrentTime(0)
     }
 
     render () {
